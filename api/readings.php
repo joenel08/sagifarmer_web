@@ -48,9 +48,12 @@ function normalize_type($t) {
 //     <= 30 cm     -> HIGH  (water is close / high, flood risk)
 //
 //  SOIL MOISTURE (raw ADC, capacitive sensor, higher = drier)
-//     >= 2784 ADC  -> DRY   (needs watering)
-//     961 – 2783   -> OPTIMAL
-//     <= 960 ADC   -> WET   (too much water)
+//     >= 3001 ADC  -> DRY   (needs watering)
+//     1601 – 3000  -> MID   (normal, no alert)
+//     <= 1600 ADC  -> WET   (too much water)
+//
+//  NOTE: Raw ADC value is always saved to the DB as-is.
+//        Wet/Mid/Dry labels are ONLY used to decide alerts.
 // ------------------------------------------------------------
 function check_threshold($type, $value, $sensorName) {
     if ($type === 'water_level') {
@@ -68,25 +71,25 @@ function check_threshold($type, $value, $sensorName) {
                 "high",
             ];
         }
-    } else { // soil_moisture
-        if ($value >= 2784) {
+    } else { // soil_moisture — raw ADC
+        if ($value >= 3001) {          // DRY
             return [
                 "Soil Too Dry",
                 "Soil moisture at $sensorName reads {$value} ADC. Consider watering.",
                 "medium",
             ];
         }
-        if ($value <= 960) {
+        if ($value <= 1600) {          // WET
             return [
                 "Soil Too Wet",
                 "Soil moisture at $sensorName reads {$value} ADC. Drainage may be needed.",
                 "low",
             ];
         }
+        // 1601 – 3000 = MID → normal, no alert
     }
     return null;
 }
-
 // ------------------------------------------------------------
 // Process ONE reading by plot_id
 // ------------------------------------------------------------

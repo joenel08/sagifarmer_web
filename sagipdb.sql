@@ -31,11 +31,16 @@ CREATE TABLE IF NOT EXISTS `alerts` (
   PRIMARY KEY (`id`),
   KEY `plot_id` (`plot_id`),
   CONSTRAINT `alerts_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `plots` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table sagipfarmer.alerts: ~1 rows (approximately)
+-- Dumping data for table sagipfarmer.alerts: ~5 rows (approximately)
 INSERT IGNORE INTO `alerts` (`id`, `plot_id`, `alert_type`, `message`, `severity`, `is_read`, `created_at`) VALUES
-	(8, 1, 'Low Water Level', 'Water level at RWaterLevel dropped to 30%. Irrigation needed.', 'high', 0, '2026-10-02 13:48:12');
+	(8, 1, 'Low Water Level', 'Water level at RWaterLevel dropped to 30%. Irrigation needed.', 'high', 0, '2026-10-02 13:48:12'),
+	(9, 2, 'Soil Too Dry', 'Soil moisture at Corn Field reads 3500 ADC. Consider watering.', 'medium', 0, '2026-10-25 13:19:34'),
+	(10, 2, 'Soil Too Dry', 'Soil moisture at Corn Field reads 3500 ADC. Consider watering.', 'medium', 0, '2026-10-25 13:34:58'),
+	(11, 1, 'Low Water Level', 'Water level at RWaterLevel is low (300 cm). Irrigation needed.', 'high', 0, '2026-10-25 13:34:58'),
+	(12, 2, 'Soil Too Dry', 'Soil moisture at Corn Field reads 3500 ADC. Consider watering.', 'medium', 0, '2026-10-25 13:42:21'),
+	(13, 1, 'Low Water Level', 'Water level at RWaterLevel is low (100 cm). Irrigation needed.', 'high', 0, '2026-10-25 13:42:23');
 
 -- Dumping structure for table sagipfarmer.plots
 CREATE TABLE IF NOT EXISTS `plots` (
@@ -62,14 +67,14 @@ INSERT IGNORE INTO `plots` (`id`, `user_id`, `sensor_name`, `sensor_type`, `sens
 CREATE TABLE IF NOT EXISTS `readings` (
   `id` int NOT NULL AUTO_INCREMENT,
   `plot_id` int NOT NULL,
-  `value` decimal(5,2) NOT NULL,
+  `value` decimal(7,2) NOT NULL,
   `reading_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `plot_id` (`plot_id`),
   CONSTRAINT `readings_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `plots` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table sagipfarmer.readings: ~9 rows (approximately)
+-- Dumping data for table sagipfarmer.readings: ~16 rows (approximately)
 INSERT IGNORE INTO `readings` (`id`, `plot_id`, `value`, `reading_time`) VALUES
 	(1, 2, 45.00, '2026-09-30 12:46:24'),
 	(2, 1, 30.00, '2026-10-02 13:08:16'),
@@ -80,7 +85,15 @@ INSERT IGNORE INTO `readings` (`id`, `plot_id`, `value`, `reading_time`) VALUES
 	(7, 1, 30.00, '2026-10-02 13:29:26'),
 	(8, 1, 30.00, '2026-10-02 13:39:46'),
 	(9, 1, 30.00, '2026-10-02 13:41:21'),
-	(10, 1, 30.00, '2026-10-02 13:48:12');
+	(10, 1, 30.00, '2026-10-02 13:48:12'),
+	(11, 2, 3500.00, '2026-10-25 13:19:34'),
+	(12, 1, 1200.00, '2026-10-25 13:19:36'),
+	(13, 2, 3500.00, '2026-10-25 13:34:58'),
+	(14, 1, 300.00, '2026-10-25 13:34:58'),
+	(15, 2, 3500.00, '2026-10-25 13:35:32'),
+	(16, 1, 100.00, '2026-10-25 13:35:32'),
+	(17, 2, 3500.00, '2026-10-25 13:42:21'),
+	(18, 1, 100.00, '2026-10-25 13:42:23');
 
 -- Dumping structure for table sagipfarmer.users
 CREATE TABLE IF NOT EXISTS `users` (
